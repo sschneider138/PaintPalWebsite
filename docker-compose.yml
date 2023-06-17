@@ -1,0 +1,24 @@
+version: '4.16'
+
+services:
+  pgdb:
+    container_name: Cp3ReportingFormV2
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  pgadmin:
+    container_name: Cp3ReportingFormV2_databaseAdmin
+    image: dpage/pgadmin4
+    restart: always
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: samschneider@unomaha.edu
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
