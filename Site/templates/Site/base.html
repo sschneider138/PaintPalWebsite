@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -13,11 +14,12 @@
     <link rel="stylesheet" type="text/css" href="{% static 'Site/main.css' %}">
 
     {% if title %}
-        <title>PaintPal - {{ title }}</title>
+    <title>PaintPal - {{ title }}</title>
     {% else %}
-        <title>PaintPal</title>
+    <title>PaintPal</title>
     {% endif %}
 </head>
+
 <body>
     <header class="site-header">
         <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
@@ -36,24 +38,24 @@
                             <a class="nav-link" href="{% url 'about' %}">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'helloWorld' %}">Hello World</a>
+                            <a class="nav-link" href="{% url 'paintCalculator' %}">Estimate My Rooms!</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav">
                         {% if user.is_authenticated %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'profile' %}">Profile</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
                         {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'login' %}">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'register' %}">Register</a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
                         {% endif %}
                     </ul>
                 </div>
@@ -82,4 +84,5 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 </body>
+
 </html>

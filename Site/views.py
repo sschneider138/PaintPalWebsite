@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from django.utils.decorators import method_decorator
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, WallDimensionsForm, WallDimensionsFormSet
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.shortcuts import render
 
 # Create your views here.
 class HomeView(View):
@@ -15,13 +16,8 @@ class HomeView(View):
 class AboutView(View):
     def get(self, request):
         return render(request, "Site/about.html", {"title": "About"})
-       
-        
-class HelloWorld(View):
-    def get(self, request):
-        return render(request, "Site/helloWorld.html", {"title": "HelloWorld"})
-    
-    
+
+
 class RegisterView(View):
     def get(self, request):
         form = UserRegisterForm()
@@ -63,3 +59,35 @@ class ProfileView(LoginRequiredMixin, View):
         }
         return render(request, 'Site/profile.html', context)
 
+class PaintCalculatorView(View):
+    # @method_decorator(login_required)
+    def get(self, request):
+        formset = WallDimensionsFormSet()
+        return render(request, 'Site/paintCalculator.html', {'formset': formset})
+
+    # @method_decorator(login_required)
+    def post(self, request):
+        formset = WallDimensionsFormSet(request.POST)
+        if formset.is_valid():
+            totalPaintVolume = 0
+            for form in formset:
+                height = form.cleaned_data['height']
+                width = form.cleaned_data['width']
+
+                surfaceArea = width * height
+                .0
+                # internet searching estimates layer is 0.05mm when dry. Double this for estimated wet thickness 
+                # source - https://www.quora.com/If-someone-painted-a-coat-of-paint-on-the-walls-of-their-house-a-hundred-times-would-the-walls-become-thicker
+                
+                # find volume in m^3
+                paintVolume = (surfaceArea * 0.0001)
+                
+                # find volume in liters
+                paintVolume = paintVolume * 1000
+
+                # sum over all walls
+                totalPaintVolume += paintVolume
+
+            return render(request, 'Site/result.html', {'paintVolume': totalPaintVolume})
+
+        return render(request, 'Site/paintCalculator.html', {'formset': formset})
