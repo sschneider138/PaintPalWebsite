@@ -1,0 +1,45 @@
+{% extends "Site/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <div id="formset">
+        {{ formset.management_form }}
+        {% for form in formset %}
+        {{ form|crispy }}
+        {% endfor %}
+    </div>
+    <button type="button" id="add-row">Add Row</button>
+    <button type="submit">Calculate</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addButton = document.getElementById('add-row');
+        const formset = document.getElementById('formset');
+        const totalFormsInput = document.querySelector('input[name=form-TOTAL_FORMS]');
+        let formCount = parseInt(totalFormsInput.value);
+
+        addButton.addEventListener('click', function () {
+            const newForm = document.createElement('div');
+            newForm.innerHTML = `
+          <div>
+            <label for="id_form-${formCount}-height">Height (in meters)</label>
+            <input type="number" name="form-${formCount}-height" step="0.01" required>
+            <label for="id_form-${formCount}-width">Width (in meters)</label>
+            <input type="number" name="form-${formCount}-width" step="0.01" required>
+          </div>
+        `;
+            formCount++;
+            totalFormsInput.value = formCount;
+            
+            // const formHtml = newForm.querySelector('div').innerHTML;
+            // newForm.innerHTML = '{{ formset.empty_form|crispy }}';
+            // newForm.querySelector('div').innerHTML = formHtml;
+            
+            formset.appendChild(newForm);
+        });
+    });
+</script>
+
+{% endblock content %}
