@@ -7,6 +7,8 @@ from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, WallDime
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 
+from calculations.PaintCalculations import *
+
 # Create your views here.
 class HomeView(View):
     def get(self, request):
@@ -60,34 +62,35 @@ class ProfileView(LoginRequiredMixin, View):
         return render(request, 'Site/profile.html', context)
 
 class PaintCalculatorView(View):
-    # @method_decorator(login_required)
+    login_url = 'login'
+    redirect_field_name = 'next'
+
     def get(self, request):
+        if not request.user.is_authenticated:
+            messages.warning(request, f"You must have a registered account to access this feature.")
+            return redirect('register')
+
         formset = WallDimensionsFormSet()
         return render(request, 'Site/paintCalculator.html', {'formset': formset})
 
-    # @method_decorator(login_required)
+    @method_decorator(login_required)
     def post(self, request):
         formset = WallDimensionsFormSet(request.POST)
         if formset.is_valid():
+            selectedUnit = formset[0].cleaned_data['unitChoice']  # Get the selected unit from the first form in the formset
+            print(f"Selected unit: {selectedUnit}")
             totalPaintVolume = 0
             for form in formset:
                 height = form.cleaned_data['height']
                 width = form.cleaned_data['width']
 
-                surfaceArea = width * height
-                .0
-                # internet searching estimates layer is 0.05mm when dry. Double this for estimated wet thickness 
-                # source - https://www.quora.com/If-someone-painted-a-coat-of-paint-on-the-walls-of-their-house-a-hundred-times-would-the-walls-become-thicker
-                
-                # find volume in m^3
-                paintVolume = (surfaceArea * 0.0001)
-                
-                # find volume in liters
-                paintVolume = paintVolume * 1000
+                # sum over all walls by grabbing number from returned array. the first element [0] is the volume mangitude
+                totalPaintVolume += PaintCalculations(height, width, selectedUnit).calculatePaintRequired()[0]
 
-                # sum over all walls
-                totalPaintVolume += paintVolume
+                # grab the units associated with the calculation. this is stored as the second element [1] in the returned array
+                units = PaintCalculations(height, width, selectedUnit).calculatePaintRequired()[1]
 
-            return render(request, 'Site/result.html', {'paintVolume': totalPaintVolume})
+            # pass magnitude arr[0] and units arr[1] in as context for following page
+            return render(request, 'Site/result.html', {'paintVolume': totalPaintVolume, 'units' : units})
 
         return render(request, 'Site/paintCalculator.html', {'formset': formset})

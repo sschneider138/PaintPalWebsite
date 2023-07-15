@@ -3,6 +3,9 @@
 {% block content %}
 
 <h3>Total Paint Volume Needed:</h3>
-<p>{{ paintVolume }} liters</p>
+<br>
+<h2>{{ paintVolume }} {{ units }}</h2>
+<br>
+<button class="btn btn-outline-info" onclick="location.href='{% url 'paintCalculator' %}'">Calculate Again!</button>
 
 {% endblock content %}

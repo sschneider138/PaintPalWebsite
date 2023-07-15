@@ -23,6 +23,11 @@ ul {
     background-color: #5f788a;
 }
 
+.bg-burnt-orange {
+    background-color: #E25822;
+    /* Replace this with your desired burnt orange color code */
+}
+
 .site-header .navbar-nav .nav-link {
     color: #ffffff;
 }
@@ -88,4 +93,16 @@ a.article-title:hover {
 
 .account-heading {
     font-size: 2.5rem;
+}
+
+.button {
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #008CBA;
 }

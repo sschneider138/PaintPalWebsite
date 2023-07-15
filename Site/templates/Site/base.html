@@ -22,7 +22,7 @@
 
 <body>
     <header class="site-header">
-        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <nav class="navbar navbar-expand-md navbar-dark bg-burnt-orange fixed-top">
             <div class="container">
                 <a class="navbar-brand mr-4" href="/">PaintPal</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
@@ -36,6 +36,10 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'about' %}">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'paintCalculator' %}"><strong>Calculate Paint
+                                    Needed</strong></a>
                         </li>
                     </ul>
                     <ul class="navbar-nav">
@@ -63,6 +67,13 @@
     <main role="main" class="container">
         <div class="row">
             <div class="col-md-8">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
                 {% block content %}
                 {% endblock %}
             </div>

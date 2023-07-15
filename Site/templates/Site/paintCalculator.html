@@ -9,37 +9,14 @@
         {{ form|crispy }}
         {% endfor %}
     </div>
-    <button type="button" id="add-row">Add Row</button>
-    <button type="submit">Calculate</button>
+    <button class="btn btn-outline-info" type="button" id="add-row">Add Row</button>
+    <button class="btn btn-outline-info" type="submit">Calculate</button>
 </form>
+{% endblock %}
 
+{% block extra_js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const addButton = document.getElementById('add-row');
-        const formset = document.getElementById('formset');
-        const totalFormsInput = document.querySelector('input[name=form-TOTAL_FORMS]');
-        let formCount = parseInt(totalFormsInput.value);
-
-        addButton.addEventListener('click', function () {
-            const newForm = document.createElement('div');
-            newForm.innerHTML = `
-          <div>
-            <label for="id_form-${formCount}-height">Height (in meters)</label>
-            <input type="number" name="form-${formCount}-height" step="0.01" required>
-            <label for="id_form-${formCount}-width">Width (in meters)</label>
-            <input type="number" name="form-${formCount}-width" step="0.01" required>
-          </div>
-        `;
-            formCount++;
-            totalFormsInput.value = formCount;
-            
-            // const formHtml = newForm.querySelector('div').innerHTML;
-            // newForm.innerHTML = '{{ formset.empty_form|crispy }}';
-            // newForm.querySelector('div').innerHTML = formHtml;
-            
-            formset.appendChild(newForm);
-        });
-    });
+    // ... Your JavaScript code ...
 </script>
-
-{% endblock content %}
+{% endblock extra_js %}
