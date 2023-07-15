@@ -14,3 +14,9 @@ navigation bar to manage your account for saved estimations.
 -Added home page, about page, hello world page (temporary)
 -Added login and register pages, with associated account functionality
 -Added profile page for registered users
+
+-6/22/2023
+-Added backend authentication validation for user accounts
+-Added added volume calculation for one wall
+-Added functionality for metric or US standard units, whichever user prefers
+-Added docker virtial postgres db found in docker-compose.yml file
