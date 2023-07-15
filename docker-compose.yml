@@ -2,7 +2,7 @@ version: '4.16'
 
 services:
   pgdb:
-    container_name: Cp3ReportingFormV2
+    container_name: PaintPal
     image: postgres
     restart: always
     ports:
@@ -13,7 +13,7 @@ services:
       - POSTGRES_PASSWORD=postgres
 
   pgadmin:
-    container_name: Cp3ReportingFormV2_databaseAdmin
+    container_name: PaintPal_databaseAdmin
     image: dpage/pgadmin4
     restart: always
 
