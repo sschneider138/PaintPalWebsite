@@ -30,6 +30,28 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ['bio']
 
 
+class EasterEggForm(forms.Form):
+    COMPUTATION_CHOICES = (
+        ('recursion', 'Recursion Method (slow)'),
+        ('dynamic', 'Dynamic Programming Method (fast)'),
+    )
+
+    computationChoice = forms.ChoiceField(
+        choices=COMPUTATION_CHOICES,
+        initial=None,
+        label="Select Computation Method",
+        widget=forms.RadioSelect(attrs={'class': 'computation-selector', 'id': 'computation-choice'})
+    )
+    
+    def __init__(self, *args, **kwargs):
+        self.computationChoice = kwargs.pop('Computation Choice', None)
+        super().__init__(*args, **kwargs)
+
+        self.fields['fibNumber'] = forms.IntegerField(
+            label = f'Enter Fibonacci Number',
+            min_value=0,
+        )
+
 class WallDimensionsForm(forms.Form):
     UNITS_CHOICES = (
         ('usStandard', 'US Standard units (Feet)'),
@@ -39,11 +61,12 @@ class WallDimensionsForm(forms.Form):
     unitChoice = forms.ChoiceField(
         choices=UNITS_CHOICES,
         initial=None,
+        label="Select Unit Choice",
         widget=forms.RadioSelect(attrs={'class': 'unit-selector', 'id': 'unit-choice'})
     )
 
     def __init__(self, *args, **kwargs):
-        self.unitChoice = kwargs.pop('unitChoice', 'Inches')
+        self.unitChoice = kwargs.pop('unitChoice', None)
         super().__init__(*args, **kwargs)
 
         self.fields['height'] = forms.FloatField(
@@ -57,4 +80,5 @@ class WallDimensionsForm(forms.Form):
             widget=forms.NumberInput(attrs={'step': '0.1'})  # Adjust the step based on the unit (0.01 for metric)
         )
 
+EasterEggFormSet = formset_factory(EasterEggForm, extra=1)
 WallDimensionsFormSet = formset_factory(WallDimensionsForm, extra=1)

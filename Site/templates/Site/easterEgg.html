@@ -1,0 +1,16 @@
+{% extends "Site/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    <div id="formset">
+        {{ formset.management_form }}
+        {% for form in formset %}
+        {{ form|crispy }}
+        {% endfor %}
+    </div>
+    <button class="btn btn-outline-info" type="submit">Calculate</button>
+</form>
+
+{% endblock content %}
