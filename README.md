@@ -1,5 +1,7 @@
 # PaintPalWebsite
 
+Course project for CSCI 8836, Intro to Software Engineering
+
 Welcome to PaintPal!
 PaintPal is a web application that allows you to input the dimensions to your room, 
 and calculate the estimate for the amount of paint you will need to cover that space.
