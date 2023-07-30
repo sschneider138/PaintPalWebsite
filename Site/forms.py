@@ -80,5 +80,28 @@ class WallDimensionsForm(forms.Form):
             widget=forms.NumberInput(attrs={'step': '0.1'})  # Adjust the step based on the unit (0.01 for metric)
         )
 
+        # Additional fields for door and window dimensions
+        self.fields['doorHeight'] = forms.FloatField(
+            label=f'Door Height',
+            min_value=0,
+            widget=forms.NumberInput(attrs={'step': '0.1'})  # Adjust the step based on the unit (0.01 for metric)
+        )
+        self.fields['doorWidth'] = forms.FloatField(
+            label=f'Door Width',
+            min_value=0,
+            widget=forms.NumberInput(attrs={'step': '0.1'})  # Adjust the step based on the unit (0.01 for metric)
+        )
+        self.fields['windowHeight'] = forms.FloatField(
+            label=f'Window Height',
+            min_value=0,
+            widget=forms.NumberInput(attrs={'step': '0.1'})  # Adjust the step based on the unit (0.01 for metric)
+        )
+        self.fields['windowWidth'] = forms.FloatField(
+            label=f'Window Width',
+            min_value=0,
+            widget=forms.NumberInput(attrs={'step': '0.1'})  # Adjust the step based on the unit (0.01 for metric)
+        )
+
+
 EasterEggFormSet = formset_factory(EasterEggForm, extra=1)
 WallDimensionsFormSet = formset_factory(WallDimensionsForm, extra=1)

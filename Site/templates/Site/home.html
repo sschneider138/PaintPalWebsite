@@ -3,17 +3,21 @@
 {% block content %}
 <div class="container">
   <div class="row">
-    <div class="col-md-10 offset-md-1 text-center">
-      <h1 class="display-4">Transform Your Space with PaintPal</h1>
+    <div class="col-md-12 offset-md-3 text-center">
+      <h1 class="display-10">Transform Your Space with PaintPal</h1>
       <p class="lead">Experience the Magic of Colors</p>
       <img src="{% static 'Site/brush.jpg' %}" alt="Paintbrush Icon" class="img-fluid mb-4">
       <div class="text-muted">
-        <p class="mb-4">PaintPal is your ultimate companion in home decoration and renovation projects. Whether you are planning to refresh a single room or give your entire home a makeover, we are here to help you visualize the perfect color combinations.</p>
-        <p class="mb-4">With PaintPal, you can easily enter the dimensions of your room, select the current room color, and explore various color options to find the ideal transformation. Our intuitive interface allows you to compare before and after visuals, helping you make confident decisions.</p>
-        <p class="mb-4">Unleash your creativity and experiment with endless possibilities. From soothing neutrals to bold statements, PaintPal provides a wide range of colors and shades to suit every taste and style.</p>
-        <p class="mb-4">Join our vibrant community of homeowners, interior designers, and painting enthusiasts to discover inspiration, share your projects, and embark on a colorful journey of home transformation.</p>
+        <p class="col-md-12 offset-md-0 text-justify">PaintPal is your ultimate companion in home decoration and renovation projects. Whether you are planning to refresh a single room or give your entire home a makeover, we are here to help you visualize the perfect color combinations.</p>
+        <p class="col-md-12 offset-md-0 text-justify">With PaintPal, you can easily enter the dimensions of your room, select the current room color, and explore various color options to find the ideal transformation. Our intuitive interface allows you to compare before and after visuals, helping you make confident decisions.</p>
+        <p class="col-md-12 offset-md-0 text-justify">Unleash your creativity and experiment with endless possibilities. From soothing neutrals to bold statements, PaintPal provides a wide range of colors and shades to suit every taste and style.</p>
+        <p class="col-md-12 offset-md-0 text-justify">Join our vibrant community of homeowners, interior designers, and painting enthusiasts to discover inspiration, share your projects, and embark on a colorful journey of home transformation.</p>
       </div>
-      <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-4">Start Visualizing</a>
+      {% if user.is_authenticated %}
+      <a href="{% url 'paintCalculator' %}" class="btn btn-primary btn-lg mt-4">Calculate Now!</a>
+      {% else %}
+      <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-4">Start Visualizing Today!</a>
+      {% endif %}
     </div>
   </div>
 </div>

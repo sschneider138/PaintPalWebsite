@@ -1,3 +1,4 @@
+from decimal import ROUND_HALF_UP
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
@@ -13,12 +14,10 @@ from calculations.EasterEgg import *
 class HomeView(View):
     def get(self, request):
         return render(request, "Site/home.html", {"title": "Home"})
-   
-    
-class AboutView(View):
+       
+class UsageView(View):
     def get(self, request):
-        return render(request, "Site/about.html", {"title": "About"})
-    
+        return render(request, "Site/usage.html", {"title": "Usage"})
 
 class EasterEgg(View):
     def get(self, request):
@@ -62,7 +61,7 @@ class RegisterView(View):
 
 class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
-        profile = self.request.user.profile
+        profile = request.user.profile
         userUpdateForm = UserUpdateForm(instance=request.user)
         profileUpdateForm = ProfileUpdateForm(instance=profile if profile else None)
         context = {
@@ -72,19 +71,48 @@ class ProfileView(LoginRequiredMixin, View):
         return render(request, 'Site/profile.html', context)
 
     def post(self, request):
-        profile = self.request.user.profile
+        profile = request.user.profile
         userUpdateForm = UserUpdateForm(request.POST, instance=request.user)
         profileUpdateForm = ProfileUpdateForm(request.POST, request.FILES, instance=profile if profile else None)
         if userUpdateForm.is_valid() and profileUpdateForm.is_valid():
             userUpdateForm.save()
-            profileUpdateForm.save()
+            profile = profileUpdateForm.save()
+
+            # Get the dimensions entered by the user
+            height = profileUpdateForm.cleaned_data['height']
+            width = profileUpdateForm.cleaned_data['width']
+            unit = profileUpdateForm.cleaned_data['unit']
+
+            # Calculate paint required and update the profile
+            paint_calculator = PaintCalculations(height, width, unit)
+            paint_volume, units = paint_calculator.calculatePaintRequired(profile)
+            profile.save()
+
             messages.success(request, f'Your account information has been updated!')
             return redirect('profile')
+
         context = {
             'userUpdateForm': userUpdateForm,
             'profileUpdateForm': profileUpdateForm
         }
         return render(request, 'Site/profile.html', context)
+    
+    def post(self, request):
+        # check if the reset button was pressed
+        if 'resetPaintUsed' in request.POST:
+            # get the user's profile associated with the current user
+            profile = request.user.profile
+            # reset the paint usage fields
+            profile.resetPaintUsed()
+            messages.success(request, f'Paint usage has been reset for your next project.')
+            return redirect('profile')
+        elif 'undoResetPaintUsed' in request.POST:
+            profile = request.user.profile
+            profile.undoResetPaintUsed()
+            messages.success(request, f'Paint usage reset has been undone.')
+            return redirect('profile')
+
+
 
 class PaintCalculatorView(View):
     login_url = 'login'
@@ -102,22 +130,54 @@ class PaintCalculatorView(View):
     def post(self, request):
         formset = WallDimensionsFormSet(request.POST)
         if formset.is_valid():
-            selectedUnit = formset[0].cleaned_data['unitChoice']  # Get the selected unit from the first form in the formset
-            print(f"Selected unit: {selectedUnit}")
+            selectedUnit = formset.cleaned_data[0].get('unitChoice')
             totalPaintVolume = 0
+            
             for form in formset:
-                height = form.cleaned_data['height']
-                width = form.cleaned_data['width']
+                wallHeight = form.cleaned_data['height']
+                wallWidth = form.cleaned_data['width']
+                windowHeight = form.cleaned_data['windowHeight']
+                windowWidth = form.cleaned_data['windowWidth']
+                doorHeight = form.cleaned_data['doorHeight']
+                doorWidth = form.cleaned_data['doorWidth']
+                profile = request.user.profile
+                if windowHeight > wallHeight or windowWidth > wallWidth:
+                    messages.warning(request, f"Window dimensions cannot be larger than wall dimensions.")
+                    return redirect('paintCalculator')
+                elif doorHeight > wallHeight or doorWidth > wallWidth:
+                    messages.warning(request, f"Door dimensions cannot be larger than wall dimensions.")
+                    return redirect('paintCalculator')
 
-                # sum over all walls by grabbing number from returned array. the first element [0] is the volume mangitude
-                totalPaintVolume += PaintCalculations(height, width, selectedUnit).calculatePaintRequired()[0]
+                # find paint required for the wall
+                paintCalculator = PaintCalculations(wallHeight, wallWidth, selectedUnit, profile, windowHeight, windowWidth, doorHeight, doorWidth)
+                paintVolume, units = paintCalculator.calculatePaintRequired()
 
-                # grab the units associated with the calculation. this is stored as the second element [1] in the returned array
-                units = PaintCalculations(height, width, selectedUnit).calculatePaintRequired()[1]
+                # deduct areas of unpainted windows and doors
+                if windowHeight >= 0 and windowWidth >= 0:
+                    windowArea = paintCalculator.calculateWindowArea(windowHeight, windowWidth)
+                    paintVolume -= windowArea
 
-            # pass magnitude arr[0] and units arr[1] in as context for following page
-            return render(request, 'Site/result.html', {'paintVolume': totalPaintVolume, 'units' : units})
+                if doorHeight >= 0 and doorWidth >= 0:
+                    doorArea = paintCalculator.calculateDoorArea(doorHeight, doorWidth)
+                    paintVolume -= doorArea
+
+                totalPaintVolume += paintVolume
+                if totalPaintVolume < 0:
+                    messages.warning(request, f"Your dimensions have returned a negative value. This is likely due to a window or door being larger than the wall. Please retry your calculation.")
+                    return redirect('paintCalculator')
+                
+
+            # round the paint volume to two decimal places
+            totalPaintVolume = totalPaintVolume.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+
+            # update the user's profile with the calculated paint used
+            if selectedUnit == 'metric':
+                request.user.profile.paintUsedLiters += totalPaintVolume
+            else:
+                request.user.profile.paintUsedGallons += totalPaintVolume
+            request.user.profile.save()
+
+            # pass magnitude and units as context for the following page
+            return render(request, 'Site/result.html', {'paintVolume': totalPaintVolume, 'units': units})
 
         return render(request, 'Site/paintCalculator.html', {'formset': formset})
-
-

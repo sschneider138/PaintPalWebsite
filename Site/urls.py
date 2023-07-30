@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
     path('', RedirectView.as_view(url='home', permanent=True)),
     path('home/', views.HomeView.as_view(), name='home'),
-    path('about/', views.AboutView.as_view(), name='about'),
+    path('usage/', views.UsageView.as_view(), name='usage'),
     path('register/', views.RegisterView.as_view(), name='register'),
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('paintCalculator/', views.PaintCalculatorView.as_view(), name='paintCalculator'),
