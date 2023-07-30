@@ -152,15 +152,6 @@ class PaintCalculatorView(View):
                 paintCalculator = PaintCalculations(wallHeight, wallWidth, selectedUnit, profile, windowHeight, windowWidth, doorHeight, doorWidth)
                 paintVolume, units = paintCalculator.calculatePaintRequired()
 
-                # deduct areas of unpainted windows and doors
-                if windowHeight >= 0 and windowWidth >= 0:
-                    windowArea = paintCalculator.calculateWindowArea(windowHeight, windowWidth)
-                    paintVolume -= windowArea
-
-                if doorHeight >= 0 and doorWidth >= 0:
-                    doorArea = paintCalculator.calculateDoorArea(doorHeight, doorWidth)
-                    paintVolume -= doorArea
-
                 totalPaintVolume += paintVolume
                 if totalPaintVolume < 0:
                     messages.warning(request, f"Your dimensions have returned a negative value. This is likely due to a window or door being larger than the wall. Please retry your calculation.")

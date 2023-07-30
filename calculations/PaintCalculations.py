@@ -1,7 +1,7 @@
 from decimal import ROUND_HALF_UP, Decimal
 
 class PaintCalculations:
-    def __init__(self, height, width, unit, profile=None, windowHeight=0, windowWidth=0, doorHeight=0, doorWidth=0,):
+    def __init__(self, height, width, unit, profile=None, windowHeight=0, windowWidth=0, doorHeight=0, doorWidth=0):
         self.height = height
         self.width = width
         self.unit = unit
@@ -10,55 +10,33 @@ class PaintCalculations:
         self.windowWidth = windowWidth
         self.doorHeight = doorHeight
         self.doorWidth = doorWidth
-        self.paintThicknessMeters = Decimal('0.00005')
-        self.paintThicknessFeet = self.paintThicknessMeters / Decimal('0.3048')
+        self.paintThicknessMeters = 0.0001
+        self.paintThicknessFeet = self.paintThicknessMeters / 0.3048
 
-    def calculatePaintRequired(self, isWindowPainted=False, isDoorPainted=True):
+    def findVolume(self, width, height):
+        surfaceArea = width * height
+        paintVolume = 0
         if self.unit == 'metric':
-            # find surface area in m^2
-            surfaceArea = Decimal(self.height) * Decimal(self.width)
+            paintVolume = (surfaceArea * self.paintThicknessMeters) * 1000
+        if self.unit == 'usStandard':
+            paintVolume = surfaceArea * self.paintThicknessFeet * 7.48052
+        return Decimal(paintVolume)
 
-            # find volume in m^3
-            # internet searching estimates layer is 0.05mm when dry
-            # source - https://www.quora.com/If-someone-painted-a-coat-of-paint-on-the-walls-of-their-house-a-hundred-times-would-the-walls-become-thicker
-            paintVolume = (surfaceArea * self.paintThicknessMeters)
             
-            # convert from m^3 to liters
-            paintVolume = paintVolume * Decimal('1000')
-            units = 'liters of paint'
-
-        else:
-            # find surface area in feet^2
-            surfaceArea = Decimal(self.height) * Decimal(self.width)
-
-            # find volume in feet^3
-            paintVolume = surfaceArea * self.paintThicknessFeet
-
-            # convert feet^3 to gallons
-            paintVolume = paintVolume * Decimal('7.48052')
-            units = 'gallons of paint'
-
-        # deduct areas of unpainted windows and doors
-        if not isWindowPainted:
-            windowArea = self.calculateWindowArea(self.windowHeight, self.windowWidth)
-            paintVolume -= windowArea
-
-        if not isDoorPainted:
-            doorArea = self.calculateDoorArea(self.doorHeight, self.doorWidth)  # Calculate door area
-            paintVolume -= doorArea
-
-        # Round the paint volume to two decimal places
-        paintVolume = paintVolume.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
-
-
-        # update the user's profile with the calculated paint used
-        if self.unit == 'metric':
-            self.profile.paintUsedLiters += paintVolume
-        else:
-            self.profile.paintUsedGallons += paintVolume
-
+    def calculatePaintRequired(self):
+        totalPaintVolume = 0
+        if self.height > 0 and self.width > 0:
+            totalPaintVolume += self.findVolume(self.height, self.width)
+        if self.windowHeight > 0 and self.windowWidth > 0:
+            totalPaintVolume -= self.findVolume(self.windowHeight, self.windowWidth)
+        if self.doorHeight > 0 and self.doorWidth > 0:
+            totalPaintVolume -= self.findVolume(self.doorHeight, self.doorWidth)
         # return array containing [magnitude, unitType]
-        return [paintVolume, units]
+        if self.unit == 'metric':
+            self.unit = 'Liters of Paint'
+        else:
+            self.unit = 'Gallons of Paint'
+        return [Decimal(totalPaintVolume), self.unit]
     
     def calculateWindowArea(self, windowHeight, windowWidth):
         windowArea = Decimal(windowHeight) * Decimal(windowWidth)
