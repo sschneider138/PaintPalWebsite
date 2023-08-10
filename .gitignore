@@ -2,4 +2,4 @@
 /.PaintPalVenv/
 /.PaintPalVenvPyPy/
 .DS_Store
-
+/__pycache__/
