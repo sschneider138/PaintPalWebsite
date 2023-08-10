@@ -1,3 +1,5 @@
-
+/venv/
+/.PaintPalVenv/
+/.PaintPalVenvPyPy/
 .DS_Store
 
