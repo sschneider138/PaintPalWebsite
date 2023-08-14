@@ -83,6 +83,13 @@ def calculateRealLengths(side_lengths, distance_to_rectangle, hfov, vfov, image_
     return length_real, width_real
 
 def calculate_fovs(dfov, width, height):
+    """ 
+    @brief Calculate horizontal and vertical fields of view.
+    @param dfov Diagonal field of view.
+    @param width Width of the image.
+    @param height Height of the image.
+    @return A tuple containing the horizontal and vertical fields of view.
+    """
     # Calculate the aspect ratio of the image
     aspect_ratio = width / height
 
@@ -112,6 +119,12 @@ def calculate_vfov(hfov, dfov):
 from PIL import Image
 
 def getImageDimensions(file_path):
+    """ 
+    @brief Get the dimensions of the image.
+    @param imageName The name of the image file.
+    @return A tuple containing the width and height of the image.
+    """
+
     # Open the image file
     file_path = "./static/" + file_path
     with Image.open(file_path) as img:

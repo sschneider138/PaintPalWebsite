@@ -3,6 +3,16 @@ import numpy as np
 from Site.models import ConvertedImage
 
 def detectPlane(filename, hfov, vfov, width, height):
+    """ 
+    @brief Detect the plane in the image.
+    @details Function to detect the largest rectangle plane in the image and create a ConvertedImage object.
+    @param imageName The name of the image file.
+    @param hfov Horizontal field of view.
+    @param vfov Vertical field of view.
+    @param width Width of the image.
+    @param height Height of the image.
+    @return A ConvertedImage object with the detected plane.
+    """
     print(filename)
     # Read the image
     filename = "./static/" + filename

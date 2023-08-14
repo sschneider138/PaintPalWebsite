@@ -155,10 +155,23 @@ class ProfileView(LoginRequiredMixin, View):
 
 
 class PaintCalculatorView(View):
+    """ 
+    @brief View for the paint calculator page.
+    @details This view handles both GET and POST requests for the paint calculator page, including authentication checks and rendering the formset for wall dimensions.
+    @var login_url URL to redirect to if the user is not authenticated.
+    @var redirect_field_name Field name for the redirection URL.
+    """
+
     login_url = 'login'
     redirect_field_name = 'next'
 
     def get(self, request, converted_image_id=None):
+        """ 
+        @brief Handle GET request for the paint calculator page.
+        @param request The HTTP request object.
+        @param converted_image_id Optional ID of the converted image to be displayed.
+        @return Rendered HTML page with formset and images.
+        """
         if not request.user.is_authenticated:
             messages.warning(request, f"You must have a registered account to access this feature.")
             return redirect('register')
@@ -236,6 +249,12 @@ class PaintCalculatorView(View):
         return render(request, 'Site/paintCalculator.html', {'formset': formset, 'latest_image': latest_image})
     
 def upload_image(request):
+    """ 
+    @brief View for uploading images.
+    @details Handles the image upload process including validation, conversion, saving, and redirection to the paint calculator page.
+    @param request The HTTP request object.
+    @return Redirect to the paint calculator page or rendered HTML page with upload form.
+    """
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
