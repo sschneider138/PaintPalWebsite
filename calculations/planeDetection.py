@@ -1,9 +1,11 @@
 import cv2
 import numpy as np
+from Site.models import ConvertedImage
 
-def detectPlane(filename):
+def detectPlane(filename, hfov, vfov, width, height):
+    print(filename)
     # Read the image
-    filename = "./staticfiles/testImages/" + filename
+    filename = "./static/" + filename
     img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
 
     # Apply Gaussian blur to remove noise
@@ -30,11 +32,30 @@ def detectPlane(filename):
     # Draw the largest rectangle
     img = cv2.imread(filename, cv2.IMREAD_COLOR)
     final_image = cv2.drawContours(img, [largest_rectangle], 0, (0, 255, 0), 2)
-    output_filename = "./staticfiles/convertedImage/" + filename.split('/')[-1].split('.')[0] + "_detected." + filename.split('.')[-1]
+    path = "convertedImage/" + filename.split('/')[-1].split('.')[0] + "_detected." + filename.split('.')[-1]
+    output_filename = "./static/convertedImage/" + filename.split('/')[-1].split('.')[0] + "_detected." + filename.split('.')[-1]
+    largest_rectangle.flatten().reshape(-1, 2).tolist()
     cv2.imwrite(output_filename, final_image)
+    print(output_filename)
 
-    #returns the x and y corner values of largest_rectangle
-    return largest_rectangle.flatten().reshape(-1, 2).tolist()
+    from django.core.files import File
+
+    corner1_x, corner1_y = largest_rectangle[0]
+    corner2_x, corner2_y = largest_rectangle[1]
+    corner3_x, corner3_y = largest_rectangle[2]
+    corner4_x, corner4_y = largest_rectangle[3]
+
+    with open(output_filename, 'rb') as image_file:
+        converted_image = ConvertedImage(
+            image=path,
+            corner1_x=corner1_x, corner1_y=corner1_y,
+            corner2_x=corner2_x, corner2_y=corner2_y,
+            corner3_x=corner3_x, corner3_y=corner3_y,
+            corner4_x=corner4_x, corner4_y=corner4_y,
+            hfov=hfov, vfov=vfov, width=width, height=height
+        )
+    return converted_image
+
 
 
 # REFERENCES FOR TESTING
@@ -43,7 +64,7 @@ def detectPlane(filename):
 # from PaintCalculations import calculateSideLengths, calculateRealArea, getImageDimensions
 # side_lengths = calculateSideLengths(corners)
 
-# distance_to_rectangle = 10 # Distance in feet
+# distance_to_rectangle = 20 # Distance in feet
 # hfov = 70 # Horizontal field of view in degrees
 # dfov = 77 # Diagonal field of view in degrees
 
@@ -51,6 +72,6 @@ def detectPlane(filename):
 
 # image_width, image_height = getImageDimensions(file_path)
 
-# area_feet, area_inches = calculateRealArea(side_lengths, distance_to_rectangle, hfov, dfov, image_width, image_height)
+# area_feet, area_inches = calculateRealArea(side_lengths, distance_to_rectangle, hfov, vfov, image_width, image_height)
 # print(f"Area in square feet: {area_feet}")
 # print(f"Area in square inches: {area_inches}")

@@ -3,6 +3,7 @@
 {% block content %}
 <form method="post">
     {% csrf_token %}
+    
     <div id="formset">
         {{ formset.management_form }}
         {% for form in formset %}
@@ -11,11 +12,18 @@
     </div>
     <button class="btn btn-outline-info" type="submit">Calculate</button>
 </form>
+{% load static %}
+{% if converted_image %}
+  <br><br>
+  <img src="{{ converted_image.image.url }}" alt="Converted Image" class="converted-image">
+  
+{% endif %}
+<br>
+<a href="{% url 'uploadImage' %}">Upload Image</a>
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">console.log("hello")</script>
 <script>
-    // ... Your JavaScript code ...
 </script>
 {% endblock extra_js %}

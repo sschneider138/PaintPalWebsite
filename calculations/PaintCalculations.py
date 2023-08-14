@@ -1,5 +1,7 @@
 from decimal import ROUND_HALF_UP, Decimal
 import numpy as np
+from math import atan, tan, degrees, sqrt
+
 
 class PaintCalculations:
     def __init__(self, height, width, unit, profile=None, windowHeight=0, windowWidth=0, doorHeight=0, doorWidth=0):
@@ -62,9 +64,8 @@ def calculateSideLengths(corners):
 import math
 
 
-def calculateRealArea(side_lengths, distance_to_rectangle, hfov, dfov, image_width, image_height):
+def calculateRealLengths(side_lengths, distance_to_rectangle, hfov, vfov, image_width, image_height):
     # Calculate the vertical field of view (VFOV) in degrees
-    vfov = calculate_vfov(hfov, dfov)
 
     # Calculate the angular resolution per pixel
     angular_resolution_horizontal = hfov / image_width
@@ -77,13 +78,27 @@ def calculateRealArea(side_lengths, distance_to_rectangle, hfov, dfov, image_wid
     # Calculate the real-world lengths in feet using the tangent function
     length_real = 2 * distance_to_rectangle * math.tan(angle_length / 2)
     width_real = 2 * distance_to_rectangle * math.tan(angle_width / 2)
-    print(length_real)
-    print(width_real)
 
     # Calculate the area in square feet and square inches
-    area_feet = length_real * width_real
-    area_inches = area_feet * 144
-    return area_feet, area_inches
+    return length_real, width_real
+
+def calculate_fovs(dfov, width, height):
+    # Calculate the aspect ratio of the image
+    aspect_ratio = width / height
+
+    # Calculate the diagonal aspect ratio
+    diagonal_aspect_ratio = sqrt(1 + aspect_ratio**2)
+
+    # Convert diagonal FOV to radians
+    diagonal_fov_rad = dfov * (3.14159265 / 180)
+
+    # Calculate horizontal FOV in degrees
+    hfov = 2 * degrees(atan(tan(diagonal_fov_rad / 2) / diagonal_aspect_ratio))
+
+    # Calculate vertical FOV in degrees
+    vfov = hfov / aspect_ratio
+
+    return hfov, vfov
 
 def calculate_vfov(hfov, dfov):
     # Calculate the ratio of the diagonal FOV to the horizontal FOV
@@ -98,6 +113,7 @@ from PIL import Image
 
 def getImageDimensions(file_path):
     # Open the image file
+    file_path = "./static/" + file_path
     with Image.open(file_path) as img:
         # Get the width and height of the image
         width, height = img.size

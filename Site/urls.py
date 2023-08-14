@@ -10,8 +10,11 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register'),
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('paintCalculator/', views.PaintCalculatorView.as_view(), name='paintCalculator'),
+    path('paintCalculator/<int:converted_image_id>/', views.PaintCalculatorView.as_view(), name='paintCalculatorWithImage'),
     path('login/', authViews.LoginView.as_view(template_name='Site/login.html'), name='login'),
     path('logout/', authViews.LogoutView.as_view(template_name='Site/logout.html'), name='logout'),
-    path('easterEgg/', views.EasterEgg.as_view(), name='easterEgg')
+    path('easterEgg/', views.EasterEgg.as_view(), name='easterEgg'),
+    path('uploadImage/', views.upload_image, name='uploadImage'),
+    path('deleteImage/', views.delete_image, name='deleteImage'),
 
-]
+] 

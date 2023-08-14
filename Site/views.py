@@ -4,23 +4,49 @@ from django.views import View
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, WallDimensionsFormSet, EasterEggFormSet
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, WallDimensionsFormSet, EasterEggFormSet, ImageUploadForm, WallDimensionsForm, formset_factory
+from .models import UploadedImage
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
+from django.http import JsonResponse
+from calculations.planeDetection import *
+import os
+
 
 from calculations.PaintCalculations import *
 from calculations.EasterEgg import *
 
 class HomeView(View):
     def get(self, request):
+        latest_image = ConvertedImage.objects.last()
+        if latest_image:
+            latest_image.image.delete() # Deletes the image file
+            latest_image.delete() # Deletes the database record
+            request.session.pop('length', None)
+            request.session.pop('height', None)
+            request.session.modified = True
         return render(request, "Site/home.html", {"title": "Home"})
        
 class UsageView(View):
     def get(self, request):
+        latest_image = ConvertedImage.objects.last()
+        if latest_image:
+            latest_image.image.delete() # Deletes the image file
+            latest_image.delete() # Deletes the database record
+            request.session.pop('length', None)
+            request.session.pop('height', None)
+            request.session.modified = True
         return render(request, "Site/usage.html", {"title": "Usage"})
 
 class EasterEgg(View):
     def get(self, request):
+        latest_image = ConvertedImage.objects.last()
+        if latest_image:
+            latest_image.image.delete() # Deletes the image file
+            latest_image.delete() # Deletes the database record
+            request.session.pop('length', None)
+            request.session.pop('height', None)
+            request.session.modified = True
         # Pass 'computationChoice' argument to forms in the formset during formset initialization
         formset = EasterEggFormSet()
         return render(request, "Site/easterEgg.html", {'formset': formset})
@@ -46,6 +72,13 @@ class EasterEgg(View):
 
 class RegisterView(View):
     def get(self, request):
+        latest_image = ConvertedImage.objects.last()
+        if latest_image:
+            latest_image.image.delete() # Deletes the image file
+            latest_image.delete() # Deletes the database record
+            request.session.pop('length', None)
+            request.session.pop('height', None)
+            request.session.modified = True
         form = UserRegisterForm()
         return render(request, 'Site/register.html', {'form': form})
 
@@ -61,6 +94,13 @@ class RegisterView(View):
 
 class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
+        latest_image = ConvertedImage.objects.last()
+        if latest_image:
+            latest_image.image.delete() # Deletes the image file
+            latest_image.delete() # Deletes the database record
+            request.session.pop('length', None)
+            request.session.pop('height', None)
+            request.session.modified = True
         profile = request.user.profile
         userUpdateForm = UserUpdateForm(instance=request.user)
         profileUpdateForm = ProfileUpdateForm(instance=profile if profile else None)
@@ -118,17 +158,32 @@ class PaintCalculatorView(View):
     login_url = 'login'
     redirect_field_name = 'next'
 
-    def get(self, request):
+    def get(self, request, converted_image_id=None):
         if not request.user.is_authenticated:
             messages.warning(request, f"You must have a registered account to access this feature.")
             return redirect('register')
+        
+        converted_image = ConvertedImage.objects.get(pk=converted_image_id) if converted_image_id else None
+        length = request.session.get('length', None)
+        height = request.session.get('height', None)
 
-        formset = WallDimensionsFormSet()
-        return render(request, 'Site/paintCalculator.html', {'formset': formset})
+        initial_data = {}
+        if length and height:
+            length = round(length, 1)
+            height = round(height, 1)
+            initial_data['width'] = length
+            initial_data['height'] = height
+        initial_data_list = [initial_data] 
+        WallDimensionsFormSet = formset_factory(WallDimensionsForm, extra=0)
+        formset = WallDimensionsFormSet(initial=initial_data_list)
+        latest_image = UploadedImage.objects.last() if UploadedImage.objects.exists() else None
+        return render(request, 'Site/paintCalculator.html', {'formset': formset, 'latest_image': latest_image, 'converted_image': converted_image,})
+
 
     @method_decorator(login_required)
-    def post(self, request):
+    def post(self, request, converted_image_id=None):
         formset = WallDimensionsFormSet(request.POST)
+        latest_image = UploadedImage.objects.last() if UploadedImage.objects.exists() else None
         if formset.is_valid():
             selectedUnit = formset.cleaned_data[0].get('unitChoice')
             totalPaintVolume = 0
@@ -169,6 +224,70 @@ class PaintCalculatorView(View):
             request.user.profile.save()
 
             # pass magnitude and units as context for the following page
+            latest_image = ConvertedImage.objects.last()
+            if latest_image:
+                latest_image.image.delete()
+                latest_image.delete()
+                request.session.pop('length', None)
+                request.session.pop('height', None)
+                request.session.modified = True
             return render(request, 'Site/result.html', {'paintVolume': totalPaintVolume, 'units': units})
 
-        return render(request, 'Site/paintCalculator.html', {'formset': formset})
+        return render(request, 'Site/paintCalculator.html', {'formset': formset, 'latest_image': latest_image})
+    
+def upload_image(request):
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            imageFile = form.cleaned_data['image']
+            dfov = form.cleaned_data['fov']
+            distance_to_image = form.cleaned_data['distance_to_image']
+            uploaded_image = UploadedImage(image=imageFile)
+            uploaded_image.save()
+            imageName = uploaded_image.image.name
+            latest_image = UploadedImage.objects.last()
+
+            #start prep for convertedImage
+            width, height = getImageDimensions(imageName)
+            hfov, vfov = calculate_fovs(dfov, width, height)
+            converted_image = detectPlane(imageName, hfov, vfov, width, height)
+            converted_image.save()
+
+            #Get real height and width
+            corners = get_points_from_converted_image(converted_image)
+            sides = calculateSideLengths(corners)
+            length, height = calculateRealLengths(sides, distance_to_image, hfov, vfov, width, height)
+            request.session['length'] = length
+            request.session['height'] = height
+            latest_image.image.delete()
+            latest_image.delete()
+            messages.success(request, "Image uploaded successfully!")
+            return redirect('paintCalculatorWithImage', converted_image_id=converted_image.id) # Redirect to the paint calculator page
+    else:
+        form = ImageUploadForm()
+
+    return render(request, 'Site/upload_image.html', {'form': form})
+
+def delete_image(request):
+    latest_image = UploadedImage.objects.last()
+    if latest_image:
+        latest_image.image.delete() # Deletes the image file
+        latest_image.delete() # Deletes the database record
+    latest_image = ConvertedImage.objects.last()
+    if latest_image:
+        latest_image.image.delete() # Deletes the image file
+        latest_image.delete() # Deletes the database record
+        request.session.pop('length', None)
+        request.session.pop('height', None)
+        request.session.modified = True
+
+def get_points_from_converted_image(converted_image):
+    points = [
+        (converted_image.corner1_x, converted_image.corner1_y),
+        (converted_image.corner2_x, converted_image.corner2_y),
+        (converted_image.corner3_x, converted_image.corner3_y),
+        (converted_image.corner4_x, converted_image.corner4_y),
+    ]
+    return points
+
+

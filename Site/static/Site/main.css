@@ -106,3 +106,18 @@ a.article-title:hover {
     cursor: pointer;
     background-color: #008CBA;
 }
+
+.uploaded-image {
+    max-width: 100%; /* or set a specific width like 300px */
+    height: auto; /* maintain aspect ratio */
+    display: block; /* center the image */
+    margin: 0 auto; /* center the image */
+}
+
+.converted-image {
+    width: 100%; /* Makes the image take the full width of the container */
+    height: auto; /* Adjusts the height automatically based on the original aspect ratio */
+    display: block; /* Makes the image a block-level element */
+    margin: 0 auto; /* Centers the image */
+  }
+

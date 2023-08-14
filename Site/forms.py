@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import MinValueValidator
 from django.forms import formset_factory
-from .models import Profile
+from .models import Profile, UploadedImage
 from django import forms
 # from django.forms.formsets import formset_factory
 
@@ -60,7 +60,7 @@ class WallDimensionsForm(forms.Form):
 
     unitChoice = forms.ChoiceField(
         choices=UNITS_CHOICES,
-        initial=None,
+        initial='usStandard',
         label="Select Unit Choice",
         widget=forms.RadioSelect(attrs={'class': 'unit-selector', 'id': 'unit-choice'})
     )
@@ -101,6 +101,18 @@ class WallDimensionsForm(forms.Form):
             min_value=0,
             widget=forms.NumberInput(attrs={'step': '0.1'})  # Adjust the step based on the unit (0.01 for metric)
         )
+
+class ImageUploadForm(forms.ModelForm):
+    image = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control'}))
+    fov = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Field of View'}))
+    distance_to_image = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Distance to Image'}))
+
+    class Meta:
+        model = UploadedImage
+        fields = ['image', 'fov', 'distance_to_image']
+
+
+
 
 
 EasterEggFormSet = formset_factory(EasterEggForm, extra=1)

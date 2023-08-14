@@ -27,3 +27,21 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         super(Profile, self).save(*args, **kwargs)
+
+class UploadedImage(models.Model):
+    image = models.ImageField(upload_to='uploadedImages/')
+
+class ConvertedImage(models.Model):
+    image = models.ImageField(upload_to='convertedImage/')
+    corner1_x = models.FloatField()
+    corner1_y = models.FloatField()
+    corner2_x = models.FloatField()
+    corner2_y = models.FloatField()
+    corner3_x = models.FloatField()
+    corner3_y = models.FloatField()
+    corner4_x = models.FloatField()
+    corner4_y = models.FloatField()
+    hfov = models.FloatField() 
+    vfov = models.FloatField() 
+    width = models.FloatField() 
+    height = models.FloatField()
