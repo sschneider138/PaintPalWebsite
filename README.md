@@ -22,3 +22,11 @@ navigation bar to manage your account for saved estimations.
 -Added added volume calculation for one wall
 -Added functionality for metric or US standard units, whichever user prefers
 -Added docker virtial postgres db found in docker-compose.yml file
+
+
+-8/14/2023
+-Added backend image processing to highlight largest planar surface
+-Added calculations to extract real-world distances from image
+-Added upload and cleanup processes for image upload
+-Added upload page for image
+-Added dimension importing from image for wall height and length
