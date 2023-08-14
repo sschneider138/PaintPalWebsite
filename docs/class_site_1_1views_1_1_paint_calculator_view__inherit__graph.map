@@ -1,0 +1,5 @@
+<map id="Site.views.PaintCalculatorView" name="Site.views.PaintCalculatorView">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,80,205,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="80,5,130,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,47,108,80,102,80,102,47"/>
+</map>

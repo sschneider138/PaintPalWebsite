@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['0001_5finitial_0',['0001_initial',['../namespace_site_1_1migrations_1_10001__initial.html',1,'Site::migrations']]],
+  ['admin_1',['admin',['../namespace_site_1_1admin.html',1,'Site']]],
+  ['apps_2',['apps',['../namespace_site_1_1apps.html',1,'Site']]],
+  ['forms_3',['forms',['../namespace_site_1_1forms.html',1,'Site']]],
+  ['migrations_4',['migrations',['../namespace_site_1_1migrations.html',1,'Site']]],
+  ['models_5',['models',['../namespace_site_1_1models.html',1,'Site']]],
+  ['save_6',['save',['../class_site_1_1models_1_1_profile.html#a65bd49ef8c13120bb0b36c60b1cd7b8a',1,'Site::models::Profile']]],
+  ['saveprofile_7',['saveProfile',['../namespace_site_1_1signals.html#a7c21cbd3fea2b0513b734a24c56c1d4f',1,'Site::signals']]],
+  ['secret_5fkey_8',['SECRET_KEY',['../namespace_paint_pal_website_1_1settings.html#ac3e02953450bd4eba659243a7a567699',1,'PaintPalWebsite::settings']]],
+  ['settings_2epy_9',['settings.py',['../settings_8py.html',1,'']]],
+  ['signals_10',['signals',['../namespace_site_1_1signals.html',1,'Site']]],
+  ['signals_2epy_11',['signals.py',['../signals_8py.html',1,'']]],
+  ['site_12',['Site',['../namespace_site.html',1,'']]],
+  ['siteconfig_13',['SiteConfig',['../class_site_1_1apps_1_1_site_config.html',1,'Site::apps']]],
+  ['static_5froot_14',['STATIC_ROOT',['../namespace_paint_pal_website_1_1settings.html#aa3c8e681b03db65164da9d37d6eb1d3d',1,'PaintPalWebsite::settings']]],
+  ['static_5furl_15',['STATIC_URL',['../namespace_paint_pal_website_1_1settings.html#a0bab1aad6305098ebba6a96f9bdca6b1',1,'PaintPalWebsite::settings']]],
+  ['staticfiles_5fdirs_16',['STATICFILES_DIRS',['../namespace_paint_pal_website_1_1settings.html#af1333efa63b1b0b68ea6f68523d06940',1,'PaintPalWebsite::settings']]],
+  ['tests_17',['tests',['../namespace_site_1_1tests.html',1,'Site']]],
+  ['urls_18',['urls',['../namespace_site_1_1urls.html',1,'Site']]],
+  ['views_19',['views',['../namespace_site_1_1views.html',1,'Site']]]
+];

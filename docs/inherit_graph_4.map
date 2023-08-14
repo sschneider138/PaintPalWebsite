@@ -1,0 +1,17 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,140,32"/>
+<area shape="rect" id="Node000001" href="$class_site_1_1views_1_1_profile_view.html" title=" " alt="" coords="214,5,361,32"/>
+<area shape="poly" id="edge7_Node000000_Node000001" title=" " alt="" coords="154,16,213,16,213,21,154,21"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="48,132,97,159"/>
+<area shape="poly" id="edge11_Node000002_Node000001" title=" " alt="" coords="93,119,133,79,159,59,186,42,214,30,216,35,189,46,162,63,137,83,96,123"/>
+<area shape="rect" id="Node000003" href="$class_site_1_1views_1_1_easter_egg.html" title=" " alt="" coords="215,56,360,83"/>
+<area shape="poly" id="edge8_Node000002_Node000003" title=" " alt="" coords="109,125,187,92,224,81,226,86,189,97,112,130"/>
+<area shape="rect" id="Node000004" href="$class_site_1_1views_1_1_home_view.html" title=" " alt="" coords="215,107,360,133"/>
+<area shape="poly" id="edge9_Node000002_Node000004" title=" " alt="" coords="112,138,214,126,214,131,113,143"/>
+<area shape="rect" id="Node000005" href="$class_site_1_1views_1_1_paint_calculator_view.html" title=" " alt="" coords="188,157,387,184"/>
+<area shape="poly" id="edge10_Node000002_Node000005" title=" " alt="" coords="112,147,187,156,187,162,112,153"/>
+<area shape="rect" id="Node000006" href="$class_site_1_1views_1_1_register_view.html" title=" " alt="" coords="208,208,367,235"/>
+<area shape="poly" id="edge12_Node000002_Node000006" title=" " alt="" coords="112,161,189,193,226,205,224,210,187,199,109,166"/>
+<area shape="rect" id="Node000007" href="$class_site_1_1views_1_1_usage_view.html" title=" " alt="" coords="213,259,362,285"/>
+<area shape="poly" id="edge13_Node000002_Node000007" title=" " alt="" coords="96,168,137,207,162,227,189,244,216,256,214,261,186,249,159,232,133,211,93,171"/>
+</map>

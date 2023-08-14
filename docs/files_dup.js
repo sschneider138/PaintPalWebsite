@@ -1,4 +1,4 @@
 var files_dup =
 [
-    [ "manage.py", "manage_8py.html", "manage_8py" ]
+    [ "paintpal", "dir_45bf1279710204f32db9c279e78cf0c1.html", "dir_45bf1279710204f32db9c279e78cf0c1" ]
 ];

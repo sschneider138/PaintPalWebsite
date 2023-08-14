@@ -25,14 +25,27 @@
 var NAVTREE =
 [
   [ "PaintPal", "index.html", [
-    [ "PaintPalWebsite", "md__r_e_a_d_m_e.html", [
-      [ "Release Notes", "md__r_e_a_d_m_e.html#autotoc_md1", null ]
+    [ "PaintPalWebsite", "md_paintpal_2_r_e_a_d_m_e.html", [
+      [ "Release Notes", "md_paintpal_2_r_e_a_d_m_e.html#autotoc_md1", null ]
     ] ],
+    [ "LICENSE-SELECT2", "md_paintpal_2staticfiles_2admin_2css_2vendor_2select2_2_l_i_c_e_n_s_e-_s_e_l_e_c_t2.html", null ],
+    [ "LICENSE", "md_paintpal_2staticfiles_2admin_2js_2vendor_2select2_2_l_i_c_e_n_s_e.html", null ],
     [ "Packages", "namespaces.html", [
       [ "Package List", "namespaces.html", "namespaces_dup" ],
       [ "Package Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
-        [ "Functions", "namespacemembers_func.html", null ]
+        [ "Functions", "namespacemembers_func.html", null ],
+        [ "Variables", "namespacemembers_vars.html", null ]
+      ] ]
+    ] ],
+    [ "Classes", "annotated.html", [
+      [ "Class List", "annotated.html", "annotated_dup" ],
+      [ "Class Index", "classes.html", null ],
+      [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
+      [ "Class Members", "functions.html", [
+        [ "All", "functions.html", null ],
+        [ "Functions", "functions_func.html", null ],
+        [ "Variables", "functions_vars.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -43,7 +56,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"files.html"
+"0001__initial_8py.html",
+"namespace_paint_pal_website_1_1settings.html#ad33229a9ef3a491afcde5ec03b3a4136"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
